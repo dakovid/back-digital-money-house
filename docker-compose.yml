@@ -5,7 +5,7 @@ services:
       - "8085:8080"
     depends_on:
       mysql:
-        condition: service_healthy  # Agregar dependencia de health check
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -27,7 +27,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    healthcheck:       # Agregar configuración de healthcheck
+    healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
