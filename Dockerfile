@@ -1,10 +1,12 @@
-FROM openjdk:11-jdk-slim
-
+# Etapa 1: Construcción del JAR
+FROM maven:3.8.5-openjdk-11 AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-COPY target/back-digital-money-house-0.0.1.jar .
-
+# Etapa 2: Ejecución del JAR
+FROM openjdk:11-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-ENTRYPOINT ["java","-jar","back-digital-money-house-0.0.1.jar"]
-
+CMD ["java", "-jar", "app.jar"]
