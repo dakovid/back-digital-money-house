@@ -1,0 +1,81 @@
+# Compilación de Java
+/target/
+*.class
+
+# Logs
+*.log
+logs/
+log/
+*.out
+*.err
+hs_err_pid*
+
+# Configuración de IntelliJ IDEA
+*.iml
+.idea/
+.idea_modules/
+*.iws
+
+# Configuración de Eclipse
+.classpath
+.project
+.settings/
+
+# Configuración de VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Archivos del sistema Linux
+*.swp
+*~
+
+# Archivos de configuración de entorno
+.env
+.env.local
+.env.*.local
+
+# Archivos de dependencias
+/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker
+docker-compose.override.yml
+docker-compose.dev.yml
+.dockerignore
+
+# Maven
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.m2/
+
+# Gradle
+.gradle/
+build/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+.gradle-local/
+gradle-app.settings
+
+# Spring Boot
+*.jar
+*.war
+*.ear
+spring-boot-devtools.jar
+
+# Database
+*.sql
+*.sqlite
+/data/
+db/
+mysql-data/
+postgres-data/
