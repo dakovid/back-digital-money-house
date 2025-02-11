@@ -39,21 +39,17 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - mysql_config:/etc/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 20
-      start_period: 30s
+      interval: 20s
+      timeout: 10s
+      retries: 15
+      start_period: 90s
     networks:
       - app_network
 
 volumes:
   mysql_data:
-    driver: local
-  mysql_config:
-    driver: local
 
 networks:
   app_network:
