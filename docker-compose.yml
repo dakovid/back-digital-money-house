@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "8080:8080"  # Cambiado a 8080:8080 para mejor compatibilidad con Coolify
+      - "8085:8080"  # Usando puerto 8085 para evitar conflictos
     depends_on:
       mysql:
         condition: service_healthy
