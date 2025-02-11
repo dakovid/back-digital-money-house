@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "8085:8080"
+      - "8080:8080"  # Cambiado a 8080:8080 para mejor compatibilidad con Coolify
     depends_on:
       mysql:
         condition: service_healthy
@@ -16,7 +16,7 @@ services:
       SPRING_JPA_SHOW_SQL: "true"
     networks:
       - app_network
-    restart: unless-stopped
+    restart: always  # Cambiado a always para mejor recuperación
     deploy:
       resources:
         limits:
@@ -26,7 +26,7 @@ services:
 
   mysql:
     image: mysql:8.0
-    restart: unless-stopped
+    restart: always  # Cambiado a always
     env_file:
       - .env
     environment:
@@ -40,13 +40,14 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
-      interval: 20s
-      timeout: 10s
-      retries: 15
-      start_period: 90s
+      test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}", "-e", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     networks:
       - app_network
+    command: --default-authentication-plugin=mysql_native_password
 
 volumes:
   mysql_data:
