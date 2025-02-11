@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "8080"
+      - "8085:8080"
     depends_on:
       mysql:
         condition: service_healthy
@@ -14,15 +14,15 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
     networks:
       - app_network
     restart: always
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`vgsoscgwcswcwgw8s4kg0ck4.dakovid.com`)"
-      - "traefik.http.services.app.loadbalancer.server.port=8080"
-      - "traefik.http.routers.app.tls=true"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
   mysql:
     image: mysql:8.0
@@ -38,11 +38,11 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}", "-e", "SELECT 1 FROM dual;"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 120s
+      test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}", "-e", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     networks:
       - app_network
     command:
