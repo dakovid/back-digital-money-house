@@ -1,8 +1,8 @@
 services:
   app:
     build: .
-    ports:
-      - "8085:8080"
+    expose:
+      - "8080"
     depends_on:
       mysql:
         condition: service_healthy
@@ -23,6 +23,13 @@ services:
           memory: 512M
         reservations:
           memory: 256M
+    labels:
+      - "coolify.enable=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`vgsoscgwcswcwgw8s4kg0ck4.dakovid.com`)"
+      - "traefik.http.services.app.loadbalancer.server.port=8080"
+      - "traefik.http.routers.app.entrypoints=websecure"
+      - "traefik.http.routers.app.tls=true"
 
   mysql:
     image: mysql:8.0
@@ -35,8 +42,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_ALLOW_EMPTY_PASSWORD: "no"
-    ports:
-      - "3306:3306"
+    expose:
+      - "3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -52,9 +59,6 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --skip-name-resolve
-      - --max_allowed_packet=128M
-      - --innodb_buffer_pool_size=256M
-      - --wait_timeout=28800
 
 volumes:
   mysql_data:
