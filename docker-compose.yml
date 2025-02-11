@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "8085:8080"  # Usando puerto 8085 para evitar conflictos
+      - "8085:8080"
     depends_on:
       mysql:
         condition: service_healthy
@@ -16,7 +16,7 @@ services:
       SPRING_JPA_SHOW_SQL: "true"
     networks:
       - app_network
-    restart: always  # Cambiado a always para mejor recuperación
+    restart: always
     deploy:
       resources:
         limits:
@@ -26,7 +26,7 @@ services:
 
   mysql:
     image: mysql:8.0
-    restart: always  # Cambiado a always
+    restart: always
     env_file:
       - .env
     environment:
@@ -40,17 +40,25 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}", "-e", "SELECT 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 60s
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "--password=${MYSQL_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
     networks:
       - app_network
-    command: --default-authentication-plugin=mysql_native_password
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-name-resolve
+      - --max_allowed_packet=128M
+      - --innodb_buffer_pool_size=256M
+      - --wait_timeout=28800
 
 volumes:
   mysql_data:
+    driver: local
 
 networks:
   app_network:
